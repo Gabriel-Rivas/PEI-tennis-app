@@ -1,5 +1,7 @@
 import React from 'react'
 import { Table, Button } from 'react-bootstrap';
+import { Link } from 'react-router-dom'
+
 
 const JugadorList = props => {
 
@@ -11,12 +13,13 @@ const JugadorList = props => {
 
   const listaJugadores = orderByName(jugadores).map((jugador) => {
 
-    const {id, nombre, puntos} = jugador;
+    const {id, nombre, puntos,entrenador} = jugador;
     return (
       <tr key={id}>
         <td>{id}</td>
         <td>{nombre}</td>
         <td>{puntos}</td>
+        <td>{entrenador}</td>
         <td>
           <Button variant="primary" className="mr-2" onClick={()=>recalcularRanking(id)}> Recalcular ranking </Button>
           <Button variant="success" className="mr-2" onClick={()=>editarJugador(true,jugador)}> Editar </Button>
@@ -33,6 +36,7 @@ const JugadorList = props => {
           <th>ID</th>
           <th>Nombre</th>
           <th>Puntos</th>
+          <th>Entrenador</th>
           <th>Acciones</th>
         </tr>
       </thead>

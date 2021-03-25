@@ -10,9 +10,13 @@ const Jugador = props => {
 
   const initialJugadorData = { 
     nombre: '',
-    puntos: 0
+    puntos: 0,
+    entrenador: {
+      id: -1
+    } 
   }
 
+  const [listaEntrenadores,setListaEntrenadores] = useState([]);
   const [newJugadorData,setNewJugadorData] = useState(initialJugadorData);
 
   const [showModal,setShowModal] = useState(false);
@@ -22,6 +26,7 @@ const Jugador = props => {
 
   useEffect(() => {
     getJugadores();
+    getEntrenadores();
   },[]);
 
   const getJugadores = async() => {
@@ -33,6 +38,16 @@ const Jugador = props => {
       console.log(error);
     }
   }
+  
+  const getEntrenadores = async() => {
+    try{
+      let response = await API.get('/entrenadores');
+      setListaEntrenadores(response)
+    }
+    catch(error){
+      setErrorMsg(JSON.stringify(error));
+    }
+  };
 
   const borrarJugador = async(id) => {
     if (window.confirm("Estas seguro?")) {
@@ -61,6 +76,7 @@ const Jugador = props => {
       await API.save('/jugadores', newJugadorData);
       resetModal();
       getJugadores();
+      getEntrenadores();
     }
     catch(error){
       setErrorMsg(JSON.stringify(error));
@@ -72,11 +88,14 @@ const Jugador = props => {
       await API.update(`/jugadores/${id}`,newJugadorData);
       resetModal();
       getJugadores();
+      getEntrenadores();
     }
     catch(error){
       setErrorMsg(JSON.stringify(error));
     }
   }
+
+  
 
   const handleFormChange = (tipo,value) => {
     if(value === '')
@@ -113,6 +132,9 @@ const Jugador = props => {
     resetModal();
   }
 
+  
+
+
   return (
     <div className="container mt-4">
       <h1>Jugadores</h1>
@@ -126,6 +148,7 @@ const Jugador = props => {
         validate={validateForm}
         errorMsg={errorMsg}
         jugador={newJugadorData}
+        listaEntrenadores={listaEntrenadores}
       />
       <JugadorList
         jugadores={jugadores}
@@ -136,6 +159,6 @@ const Jugador = props => {
     </div>
   );
   
-}
+  }
 
 export default Jugador;
